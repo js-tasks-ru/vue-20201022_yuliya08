@@ -7,7 +7,7 @@ const API_URL = 'https://course-vue.javascript.ru/api';
 const MEETUP_ID = 6;
 
 /**
- * Возвращает ссылку на изображение митапа для митапа
+ * Возвращает ссылку на изоб`ражение митапа для митапа
  * @param meetup - объект с описанием митапа (и параметром meetupId)
  * @return {string} - ссылка на изображение митапа
  */
@@ -44,15 +44,33 @@ const agendaItemIcons = {
   other: 'cal-sm',
 };
 
+function getDateOnlyString(date) {
+  const YYYY = date.getFullYear();
+  const MM = (date.getMonth() + 1).toString().padStart(2, '0');
+  const DD = date.getDate().toString().padStart(2, '0');
+  return `${YYYY}-${MM}-${DD}`;
+}
+
 export const app = new Vue({
   el: '#app',
 
-  data: {
-    //
+  data() {
+    return {
+      meetup: {
+        title: '',
+        date: '',
+        description: '',
+        imageId: '',
+        organizer: '',
+        place: '',
+        agenda: [],
+      },
+    };
   },
 
   mounted() {
     // Требуется получить данные митапа с API
+    this.getMeetupInfo();
   },
 
   computed: {
@@ -62,5 +80,36 @@ export const app = new Vue({
   methods: {
     // Получение данных с API предпочтительнее оформить отдельным методом,
     // а не писать прямо в mounted()
+    async getMeetupInfo() {
+      let response = await fetch(API_URL + `/meetups/${MEETUP_ID}`);
+
+      if (response.ok) {
+        this.meetup = await response.json(); // { agenda: [{...}], ... }
+      } else {
+        console.log('Ошибка HTTP: ' + response.status);
+      }
+    },
+    getItemTitle(key) {
+      if (!key) {
+        return 'Здесь может быть ваш доклад';
+      }
+      return agendaItemTitles[key];
+    },
+    getItemIcon(key) {
+      return agendaItemIcons[key];
+    },
+    getCoverLink(meetup) {
+      return getMeetupCoverLink(meetup);
+    },
+    getDataTime(date) {
+      return getDateOnlyString(new Date(date));
+    },
+    getLocalDate(date) {
+      return new Date(date).toLocaleString(navigator.language, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    },
   },
 });
