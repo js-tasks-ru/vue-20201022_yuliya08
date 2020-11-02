@@ -1,27 +1,20 @@
 export const CounterButton = {
   // Шаблон потребуется отредактировать
-  template: '<button type="button" @click="changeCounter">{{ counter }}</button>',
+  template: '<button type="button" @click="changeCounter">{{ count }}</button>',
+  model: {
+    prop: 'count',
+    event: 'increment',
+  },
   props: {
-    value: {
-      type: Number,
-      default: 0,
-    },
     count: {
       type: Number,
       default: 0,
     },
   },
-  data() {
-    return {
-      counter: this.count || this.value,
-    };
-  },
 
   methods: {
     changeCounter() {
-      this.counter += 1;
-      this.$emit('increment', this.counter);
-      this.$emit('input', this.counter);
+      this.$emit('increment', this.count + 1);
     },
   },
 
