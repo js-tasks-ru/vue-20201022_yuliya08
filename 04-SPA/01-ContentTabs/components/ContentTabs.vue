@@ -1,16 +1,46 @@
 <template>
   <div class="content-tabs">
     <div class="content-tabs__nav">
-      <a href="#" class="content-tabs__tab">Page A</a>
-      <a href="#" class="content-tabs__tab">Page B</a>
+      <router-link
+        v-for="tab in tabs" :key="tab.text"
+        :to="tab.to"
+        active-class="content-tabs__tab_active"
+        class="content-tabs__tab"
+      >{{ tab.text }}</router-link>
     </div>
-    <div class="content-tabs__content">Content</div>
+    <router-view class="content-tabs__content"></router-view>
   </div>
 </template>
 
 <script>
+  export const routes = [
+    {
+      path: '/',
+      name: 'base',
+      component: () => import('@/views/BasePage'),
+      children: [
+        {
+          path: 'a',
+          name: 'a',
+          component: () => import('@/views/PageA'),
+        },
+        {
+          path: 'b',
+          name: 'b',
+          component: () => import('@/views/PageB'),
+        },
+      ],
+    },
+  ];
 export default {
   name: 'ContentTabs',
+  props: {
+    tabs: {
+      type: Array,
+      required: true,
+    },
+  },
+
 };
 </script>
 
