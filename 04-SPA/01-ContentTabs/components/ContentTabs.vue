@@ -8,30 +8,11 @@
         class="content-tabs__tab"
       >{{ tab.text }}</router-link>
     </div>
-    <router-view class="content-tabs__content"></router-view>
+    <div class="content-tabs__content"><slot></slot></div>
   </div>
 </template>
 
 <script>
-  export const routes = [
-    {
-      path: '/',
-      name: 'base',
-      component: () => import('@/views/BasePage'),
-      children: [
-        {
-          path: 'a',
-          name: 'a',
-          component: () => import('@/views/PageA'),
-        },
-        {
-          path: 'b',
-          name: 'b',
-          component: () => import('@/views/PageB'),
-        },
-      ],
-    },
-  ];
 export default {
   name: 'ContentTabs',
   props: {
